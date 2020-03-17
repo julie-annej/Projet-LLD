@@ -31,15 +31,19 @@ struct ListNumero {
 	Numero* ptrNumeros[30];
 };
 
-void ajouterDanseur(Numero& numero, Danseur *danseur, ListDanseurs& listDanseurs) {
-	numero.ptrDanseurs[numero.nDanseurs] = danseur;
-	listDanseurs.ptrDanseurs[listDanseurs.nDanseurs] = danseur;
-	numero.nDanseurs++;
+void ajouterDanseur(Danseur *ptrDanseur, Numero* ptrNumero, ListDanseurs& listDanseurs) {
+	ptrNumero->ptrDanseurs[ptrNumero->nDanseurs] = ptrDanseur;
+	ptrNumero->nDanseurs++;
+	
+	ptrDanseur->ptrNumeros[ptrDanseur->nNumeros] = ptrNumero;
+	ptrDanseur->nNumeros++;
+
+	listDanseurs.ptrDanseurs[listDanseurs.nDanseurs] = ptrDanseur;
 	listDanseurs.nDanseurs++;
 }
 
-void ajouterNumero(Numero& numero, ListNumero& ListNumero) {
-
+void ajouterNumero(const Numero* ptrNumero, ListNumero& ListNumero) {
+	
 }
 
 bool danseurDansList(Danseur *danseur, ListDanseurs& listDanseurs) {
@@ -59,13 +63,19 @@ void lireFichier(string nomFichier) {
 		cout << "Erreur lors de l'ouverture du fichier" << endl;
 	}
 	else {
+		ListNumero listNumero;
+		ListDanseurs listDanseurs;
+		
 		while (!ws(fichier).eof()) {
 			unsigned nbDanseur = 0;
-			Numero numero;
-			getline(fichier, numero.titre, '\t');
+			Numero* ptrNumero = new Numero;
+			getline(fichier, ptrNumero->titre, '\t');
+			ajouterNumero(ptrNumero, listNumero);
+
 			for (unsigned i = 0; i < nbDanseur; i++) {
 				Danseur* ptrDanseur = new Danseur{};
 				getline(fichier, ptrDanseur->nom, '\t');
+				ajouterDanseur(ptrDanseur, )
 			}
 
 		}
