@@ -16,7 +16,7 @@ struct Numero {
 
 struct Danseur {
 	string nom;
-	Numero* numero[30];
+	Numero* numero[30]; //hi
 };
 
 int main()
