@@ -2,10 +2,11 @@
 //
 
 #include <iostream>
-
-
-
-
+#include <iostream>
+#include <string>
+#include <stdio.h>
+#include "cppitertools/range.hpp"
+#include "gsl/span"
 
 int main()
 {
