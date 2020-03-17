@@ -21,8 +21,16 @@ struct Danseur {
 	Numero *ptrNumeros[30];
 };
 
-void ajouterDanseur(Numero& numero, Danseur* listPtrDanseurs[]) {
-	
+struct ListPtrDanseurs {
+	unsigned nDanseurs = 0;
+	Danseur* ptrDanseurs[450];
+};
+
+void ajouterDanseur(Numero& numero, Danseur *danseur, ListPtrDanseurs& listPtrDanseurs) {
+	numero.ptrDanseurs[numero.nDanseurs] = danseur;
+	listPtrDanseurs[listPtrDanseurs.nDanseurs] = danseur;
+	numero.nDanseurs++;
+
 }
 
 void lireFichier(string nomFichier) {
