@@ -46,7 +46,7 @@ void ajouterNumero(const Numero* ptrNumero, ListNumero& ListNumero) {
 	
 }
 
-bool danseurDansList(Danseur *danseur, ListDanseurs& listDanseurs) {
+bool danseurDansList(const Danseur *danseur, ListDanseurs& listDanseurs) {
 	bool resultat = false;
 	for (unsigned i = 0; i < listDanseurs.nDanseurs; i++) {
 		if (danseur->nom == listDanseurs.ptrDanseurs[i]->nom) {
@@ -67,15 +67,17 @@ void lireFichier(string nomFichier) {
 		ListDanseurs listDanseurs;
 		
 		while (!ws(fichier).eof()) {
-			unsigned nbDanseur = 0;
+			unsigned nbDanseurs = 0;
+			fichier >> nbDanseurs;
+
 			Numero* ptrNumero = new Numero;
 			getline(fichier, ptrNumero->titre, '\t');
 			ajouterNumero(ptrNumero, listNumero);
 
-			for (unsigned i = 0; i < nbDanseur; i++) {
+			for (unsigned i = 0; i < nbDanseurs; i++) {
 				Danseur* ptrDanseur = new Danseur{};
 				getline(fichier, ptrDanseur->nom, '\t');
-				ajouterDanseur(ptrDanseur, )
+				ajouterDanseur(ptrDanseur, ptrNumero, listDanseurs);
 			}
 
 		}
