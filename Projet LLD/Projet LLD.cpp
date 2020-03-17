@@ -32,7 +32,7 @@ struct ListNumero {
 };
 
 void ajouterDanseur(Numero& numero, Danseur *danseur, ListDanseurs& listDanseurs) {
-	numero.ptrDanseurs[numero.nDanseurs] = danseur;
+	numero.ptrDanseurs[numero.nDanseurs] = danseur;//454
 	listDanseurs.ptrDanseurs[listDanseurs.nDanseurs] = danseur;
 	numero.nDanseurs++;
 	listDanseurs.nDanseurs++;
@@ -62,6 +62,7 @@ void lireFichier(string nomFichier) {
 		while (!ws(fichier).eof()) {
 
 			Danseur * ptrDanseur = new Danseur{};
+
 		}
 	}
 }
