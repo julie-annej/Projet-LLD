@@ -16,6 +16,7 @@ struct Numero {
 
 struct Danseur {
 	string nom;
+	unsigned nNumeros = 0;
 	Numero* numero[30]; //hi
 };
 
