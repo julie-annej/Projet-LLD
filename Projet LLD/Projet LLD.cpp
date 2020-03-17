@@ -9,6 +9,10 @@
 
 using namespace std;
 
+struct Danseur;
+struct ListDanseurs;
+struct ListNumero;
+
 struct Numero {
 	string titre;
 	unsigned nDanseurs = 0;
@@ -31,6 +35,18 @@ struct ListNumero {
 	Numero* ptrNumero[30];
 };
 
+bool danseurDansList(Danseur* ptrDanseur, ListDanseurs& listDanseurs) {
+	bool resultat = false;
+	for (unsigned i = 0; i < listDanseurs.nDanseurs; i++) {
+		if (ptrDanseur->nom == listDanseurs.ptrDanseurs[i]->nom) {
+			ptrDanseur = listDanseurs.ptrDanseurs[i];
+			resultat = true;
+			break;
+		}
+	}
+	return resultat;
+}
+
 void ajouterDanseur(Danseur* ptrDanseur, Numero* ptrNumero, ListDanseurs& listDanseurs) {
 	if (!danseurDansList(ptrDanseur, listDanseurs)) {
 		listDanseurs.ptrDanseurs[listDanseurs.nDanseurs] = ptrDanseur;
@@ -47,18 +63,6 @@ void ajouterDanseur(Danseur* ptrDanseur, Numero* ptrNumero, ListDanseurs& listDa
 void ajouterNumero(Numero* ptrNumero, ListNumero& listNumero) {
 	listNumero.ptrNumero[listNumero.nNumero] = ptrNumero;
 	listNumero.nNumero++;
-}
-
-bool danseurDansList(Danseur *ptrDanseur, ListDanseurs& listDanseurs) {
-	bool resultat = false;
-	for (unsigned i = 0; i < listDanseurs.nDanseurs; i++) {
-		if (ptrDanseur->nom == listDanseurs.ptrDanseurs[i]->nom) {
-			ptrDanseur = listDanseurs.ptrDanseurs[i];
-			resultat = true;
-			break;
-		}
-	}
-	return resultat;
 }
 
 void lireFichier(string nomFichier, ListNumero& listNumero, ListDanseurs& listDanseurs) {
@@ -86,6 +90,7 @@ void lireFichier(string nomFichier, ListNumero& listNumero, ListDanseurs& listDa
 		}
 	}
 }
+
 
 int main()
 {
