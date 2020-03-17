@@ -5,8 +5,19 @@
 #include <iostream>
 #include <string>
 #include <stdio.h>
-#include "cppitertools/range.hpp"
-#include "gsl/span"
+
+using namespace std;
+
+struct Numero {
+	string titre;
+	unsigned nNumeros = 0;
+	Danseur* danseurs[500];
+};
+
+struct Danseur {
+	string nom;
+	Numero* numero[30];
+};
 
 int main()
 {
