@@ -10,7 +10,7 @@ using namespace std;
 
 struct Numero {
 	string titre;
-	unsigned nNumeros = 0;
+	unsigned nDanseurs = 0;
 	Danseur* danseurs[500];
 };
 
