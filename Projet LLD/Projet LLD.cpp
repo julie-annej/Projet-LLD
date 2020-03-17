@@ -17,8 +17,8 @@ struct Numero {
 
 struct Danseur {
 	string nom;
-	unsigned nNumeros = 0;
-	Numero *ptrNumeros[30];
+	unsigned nNumero = 0;
+	Numero *ptrNumero[30];
 };
 
 struct ListDanseurs {
@@ -27,29 +27,33 @@ struct ListDanseurs {
 };
 
 struct ListNumero {
-	unsigned nNumeros = 0;
-	Numero* ptrNumeros[30];
+	unsigned nNumero = 0;
+	Numero* ptrNumero[30];
 };
 
-void ajouterDanseur(Danseur *ptrDanseur, Numero* ptrNumero, ListDanseurs& listDanseurs) {
+void ajouterDanseur(Danseur* ptrDanseur, Numero* ptrNumero, ListDanseurs& listDanseurs) {
+	if (!danseurDansList(ptrDanseur, listDanseurs)) {
+		listDanseurs.ptrDanseurs[listDanseurs.nDanseurs] = ptrDanseur;
+		listDanseurs.nDanseurs++;
+	}
+
 	ptrNumero->ptrDanseurs[ptrNumero->nDanseurs] = ptrDanseur;
 	ptrNumero->nDanseurs++;
-	
-	ptrDanseur->ptrNumeros[ptrDanseur->nNumeros] = ptrNumero;
-	ptrDanseur->nNumeros++;
 
-	listDanseurs.ptrDanseurs[listDanseurs.nDanseurs] = ptrDanseur;
-	listDanseurs.nDanseurs++;
+	ptrDanseur->ptrNumero[ptrDanseur->nNumero] = ptrNumero;
+	ptrDanseur->nNumero++;
 }
 
-void ajouterNumero(const Numero* ptrNumero, ListNumero& ListNumero) {
-	
+void ajouterNumero(Numero* ptrNumero, ListNumero& listNumero) {
+	listNumero.ptrNumero[listNumero.nNumero] = ptrNumero;
+	listNumero.nNumero++;
 }
 
-bool danseurDansList(const Danseur *danseur, ListDanseurs& listDanseurs) {
+bool danseurDansList(Danseur *ptrDanseur, ListDanseurs& listDanseurs) {
 	bool resultat = false;
 	for (unsigned i = 0; i < listDanseurs.nDanseurs; i++) {
-		if (danseur->nom == listDanseurs.ptrDanseurs[i]->nom) {
+		if (ptrDanseur->nom == listDanseurs.ptrDanseurs[i]->nom) {
+			ptrDanseur = listDanseurs.ptrDanseurs[i];
 			resultat = true;
 			break;
 		}
@@ -57,7 +61,7 @@ bool danseurDansList(const Danseur *danseur, ListDanseurs& listDanseurs) {
 	return resultat;
 }
 
-void lireFichier(string nomFichier) {
+void lireFichier(string nomFichier, ListNumero& listNumero, ListDanseurs& listDanseurs) {
 	ifstream fichier(nomFichier);
 	if (fichier.fail()) {
 		cout << "Erreur lors de l'ouverture du fichier" << endl;
@@ -79,7 +83,6 @@ void lireFichier(string nomFichier) {
 				getline(fichier, ptrDanseur->nom, '\t');
 				ajouterDanseur(ptrDanseur, ptrNumero, listDanseurs);
 			}
-
 		}
 	}
 }
