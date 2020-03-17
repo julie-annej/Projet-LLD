@@ -26,11 +26,20 @@ struct ListDanseurs {
 	Danseur* ptrDanseurs[450];
 };
 
+struct ListNumero {
+	unsigned nNumeros = 0;
+	Numero* ptrNumeros[30];
+};
+
 void ajouterDanseur(Numero& numero, Danseur *danseur, ListDanseurs& listDanseurs) {
 	numero.ptrDanseurs[numero.nDanseurs] = danseur;
 	listDanseurs.ptrDanseurs[listDanseurs.nDanseurs] = danseur;
 	numero.nDanseurs++;
 	listDanseurs.nDanseurs++;
+}
+
+void ajouterNumero(Numero& numero, ListNumero& ListNumero) {
+
 }
 
 bool danseurDansList(Danseur *danseur, ListDanseurs& listDanseurs) {
@@ -51,7 +60,7 @@ void lireFichier(string nomFichier) {
 	}
 	else {
 		while (!ws(fichier).eof()) {
-			cin >> ;
+
 			Danseur * ptrDanseur = new Danseur{};
 		}
 	}
