@@ -104,9 +104,8 @@ unsigned cardIntersectionNumero(Numero *ptrNum1, Numero *ptrNum2) {
 
 
 void afficherUnNumero(Numero* ptrnumero) {
-	cout << "Titre: " << ptrnumero->titre;
 	for (unsigned i = 0; i < ptrnumero->nDanseurs; i++) {
-		cout << ptrnumero->ptrDanseurs[i] << " ";
+		cout << ptrnumero->ptrDanseurs[i]->nom << " ";
 	}
 }
 
@@ -116,10 +115,13 @@ int main()
 	ListDanseurs listeDeDanseurs = {};
 	ListNumero listeDeNumeros = {};
 	lireFichier(nomFichier, listeDeNumeros, listeDeDanseurs);
-	cout << listeDeNumeros.nNumero;
-	cout << listeDeDanseurs.nDanseurs;
+	cout << listeDeNumeros.nNumero << " "
+		<< listeDeDanseurs.nDanseurs << " " << endl;
+	cout << " Titre " << endl;
 	for (unsigned i = 0; i < listeDeNumeros.nNumero; i++) {
+		cout << listeDeNumeros.ptrNumero[i]->titre << ": ";
 		afficherUnNumero(listeDeNumeros.ptrNumero[i]);
+		cout << endl;
 	}
 }
 
