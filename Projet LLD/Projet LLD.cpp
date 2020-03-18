@@ -24,7 +24,7 @@ struct Numero {
 struct Danseur {
 	string nom;
 	unsigned nNumero = 0;
-	Numero *ptrNumero[30];
+	Numero* ptrNumero[30];
 };
 
 struct ListDanseurs {
@@ -105,10 +105,11 @@ unsigned cardIntersectionNumero(Numero *ptrNum1, Numero *ptrNum2) {
 	}
 	return inter.nDanseurs;
 }
-void afficherUnNumero(Numero* numero) {
-	cout << "Titre: " << numero->titre;
-	for (int i = 0; i < numero->nDanseurs; i++) {
-		cout << numero->ptrDanseurs[i] << " ";
+
+void afficherUnNumero(Numero* ptrnumero) {
+	cout << "Titre: " << ptrnumero->titre;
+	for (unsigned i = 0; i < ptrnumero->nDanseurs; i++) {
+		cout << ptrnumero->ptrDanseurs[i] << " ";
 	}
 }
 
@@ -118,7 +119,9 @@ int main()
 	ListDanseurs listeDeDanseurs;
 	ListNumero listeDeNumeros;
 	lireFichier(nomFichier, listeDeNumeros, listeDeDanseurs);
-	for (int i = 0; i < listeDeNumeros.nNumero; i++)
+	cout << listeDeNumeros.nNumero;
+	for (unsigned i = 0; i < listeDeNumeros.nNumero; i++) {
 		afficherUnNumero(listeDeNumeros.ptrNumero[i]);
-
+	}
 }
+
