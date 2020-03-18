@@ -6,8 +6,6 @@
 #include <string>
 #include <stdio.h>
 #include <fstream>
-#include <algorithm>    // std::set_union, std::sort
-#include <vector>
 
 using namespace std;
 
@@ -24,7 +22,7 @@ struct Numero {
 struct Danseur {
 	string nom;
 	unsigned nNumero = 0;
-	Numero *ptrNumero[30];
+	Numero* ptrNumero[30];
 };
 
 struct ListDanseurs {
@@ -93,22 +91,27 @@ void lireFichier(string nomFichier, ListNumero& listNumero, ListDanseurs& listDa
 	}
 }
 
-unsigned cardIntersectionNumero(Numero *ptrNum1, Numero *ptrNum2) {
-	ListDanseurs inter;
+void cardIntersectionNumero(Numero *ptrNum1, Numero *ptrNum2) {
+	ListDanseurs interDanseurs;
+	ListNumero interNumero;
 	for (unsigned i = 0; i < ptrNum1->nDanseurs; i++) {
 		for (unsigned j = 0; j < ptrNum1->nDanseurs; j++) {
 			if (ptrNum1->ptrDanseurs[i] == ptrNum2->ptrDanseurs[j]) {
-				inter.ptrDanseurs[inter.nDanseurs] = ptrNum1->ptrDanseurs[i];
-				inter.nDanseurs++;
+				interDanseurs.ptrDanseurs[interDanseurs.nDanseurs] = ptrNum1->ptrDanseurs[i];
+				interDanseurs.nDanseurs++;
+
+
 			}
+
 		}
 	}
-	return inter.nDanseurs;
+	
 }
+
 void afficherUnNumero(Numero* numero) {
 	cout << "Titre: " << numero->titre;
-	for (int i = 0; i < numero->nDanseurs; i++) {
-		cout << numero->ptrDanseurs[i] << " ";
+	for (unsigned i = 0; i < numero->nDanseurs; i++) {
+		cout << numero->ptrDanseurs[i]->nom << " ";
 	}
 }
 
@@ -118,7 +121,7 @@ int main()
 	ListDanseurs listeDeDanseurs;
 	ListNumero listeDeNumeros;
 	lireFichier(nomFichier, listeDeNumeros, listeDeDanseurs);
-	for (int i = 0; i < listeDeNumeros.nNumero; i++)
+	for (unsigned i = 0; i < listeDeNumeros.nNumero; i++) {
 		afficherUnNumero(listeDeNumeros.ptrNumero[i]);
-
+	}
 }
