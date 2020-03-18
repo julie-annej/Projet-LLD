@@ -6,6 +6,8 @@
 #include <string>
 #include <stdio.h>
 #include <fstream>
+#include <algorithm>    // std::set_union, std::sort
+#include <vector>
 
 using namespace std;
 
@@ -89,6 +91,19 @@ void lireFichier(string nomFichier, ListNumero& listNumero, ListDanseurs& listDa
 			}
 		}
 	}
+}
+
+unsigned cardIntersectionNumero(Numero *ptrNum1, Numero *ptrNum2) {
+	ListDanseurs inter;
+	for (unsigned i = 0; i < ptrNum1->nDanseurs; i++) {
+		for (unsigned j = 0; j < ptrNum1->nDanseurs; j++) {
+			if (ptrNum1->ptrDanseurs[i] == ptrNum2->ptrDanseurs[j]) {
+				inter.ptrDanseurs[inter.nDanseurs] = ptrNum1->ptrDanseurs[i];
+				inter.nDanseurs++;
+			}
+		}
+	}
+	return inter.nDanseurs;
 }
 
 
