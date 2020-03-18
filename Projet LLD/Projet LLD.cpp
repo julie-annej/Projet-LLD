@@ -105,11 +105,20 @@ unsigned cardIntersectionNumero(Numero *ptrNum1, Numero *ptrNum2) {
 	}
 	return inter.nDanseurs;
 }
-
+void afficherUnNumero(Numero* numero) {
+	cout << "Titre: " << numero->titre;
+	for (int i = 0; i < numero->nDanseurs; i++) {
+		cout << numero->ptrDanseurs[i] << " ";
+	}
+}
 
 int main()
 {
-	string nomFichier = "Test_LLD";
-	
-}
+	string nomFichier = "Test_LLD3.txt";
+	ListDanseurs listeDeDanseurs;
+	ListNumero listeDeNumeros;
+	lireFichier(nomFichier, listeDeNumeros, listeDeDanseurs);
+	for (int i = 0; i < listeDeNumeros.nNumero; i++)
+		afficherUnNumero(listeDeNumeros.ptrNumero[i]);
 
+}
