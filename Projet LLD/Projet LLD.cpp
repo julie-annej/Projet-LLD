@@ -106,6 +106,7 @@ unsigned cardIntersectionNumero(Numero *ptrNum1, Numero *ptrNum2) {
 	return inter.nDanseurs;
 }
 
+
 void afficherUnNumero(Numero* ptrnumero) {
 	cout << "Titre: " << ptrnumero->titre;
 	for (unsigned i = 0; i < ptrnumero->nDanseurs; i++) {
