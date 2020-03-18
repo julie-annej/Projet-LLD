@@ -29,7 +29,7 @@ struct Danseur {
 
 struct ListDanseurs {
 	unsigned nDanseurs = 0;
-	Danseur* ptrDanseurs[450];
+	Danseur* ptrDanseurs[45];
 };
 
 struct ListNumero {
@@ -81,13 +81,13 @@ void lireFichier(string nomFichier, ListNumero& listNumero, ListDanseurs& listDa
 			fichier >> nbDanseurs;
 
 			Numero* ptrNumero = new Numero;
-			getline(fichier, ptrNumero->titre, '\t');
-			ajouterNumero(ptrNumero, listNumero);
-
+			getline(fichier, ptrNumero->titre, '\n');
+			//ajouterNumero(ptrNumero, listNumero);
+			
 			for (unsigned i = 0; i < nbDanseurs; i++) {
 				Danseur* ptrDanseur = new Danseur{};
-				getline(fichier, ptrDanseur->nom, '\t');
-				ajouterDanseur(ptrDanseur, ptrNumero, listDanseurs);
+				getline(fichier, ptrDanseur->nom, '\n');
+				//ajouterDanseur(ptrDanseur, ptrNumero, listDanseurs);
 			}
 		}
 	}
