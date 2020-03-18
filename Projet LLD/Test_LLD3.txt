@@ -1,17 +1,62 @@
-2 Triggerz	Julie-Anne Jaeggi	Lou Amsellem
-4 JazzAdulte	Julie-Anne Jaeggi	Sarah Bélair	Sylvie Tremblay	Lou Amsellem
-5 ClaquetteAdulte	Sarah Bélair	Julie-Anne Jaeggi	Annabelle Guay	Sylvie Tremblay	Lou Amsellem
-2 Fauve	Maxim Bertrand	Annabelle Guay
-3 ContemporainSpeciale	Alexia Jaeggi	Julie-Anne Jaeggi	Béatrice Garneau
-3 JazzSpeciale	Rose Gaudreault	Sylvie Tremblay	Layla Simard
-2 Teaze	Noémie Cartier	Béatrice Garneau
-2 ContemporainAdulte	Sylvie Tremblay	Julie-Anne Jaeggi  
-2 Distribution1	Rose Gaudreault	Layla Simard
-2 Hip-hopAdulte	Sarah Bélair	Alexia Jaeggi
-3 ClaquetteBoursier	Béatrice Garneau	Noémie Cartier	Alexia Jaeggi
-3 Hip-hopBoursier 	Béatrice Garneau	Noémie Cartier	Alexia Jaeggi
-3 BalletBoursier	Béatrice Garneau	Noémie Cartier	Alexia Jaeggi
-3 JazzBoursier	Béatrice Garneau	Noémie Cartier	Alexia Jaeggi
-3 StreetJazzBoursier	Béatrice Garneau	Noémie Cartier	Alexia Jaeggi
-3 ContemporainBoursier	Noémie Cartier	Béatrice Garneau	Alexia Jaeggi
+2 Triggerz
+Julie-Anne Jaeggi
+Lou Amsellem
+4 JazzAdulte
+Julie-Anne Jaeggi
+Sarah Bélair
+Sylvie Tremblay
+Lou Amsellem
+5 ClaquetteAdulte
+Sarah Bélair
+Julie-Anne Jaeggi
+Annabelle Guay
+Sylvie Tremblay
+Lou Amsellem
+2 Fauve
+Maxim Bertrand
+Annabelle Guay
+3 ContemporainSpeciale
+Alexia Jaeggi
+Julie-Anne Jaeggi
+Béatrice Garneau
+3 JazzSpeciale
+Rose Gaudreault
+Sylvie Tremblay
+Layla Simard
+2 Teaze
+Noémie Cartier
+Béatrice Garneau
+2 ContemporainAdulte
+Sylvie Tremblay
+Julie-Anne Jaeggi  
+2 Distribution1
+Rose Gaudreault
+Layla Simard
+2 Hip-hopAdulte
+Sarah Bélair
+Alexia Jaeggi
+3 ClaquetteBoursier
+Béatrice Garneau
+Noémie Cartier
+Alexia Jaeggi
+3 Hip-hopBoursier
+Béatrice Garneau
+Noémie Cartier
+Alexia Jaeggi
+3 BalletBoursier
+Béatrice Garneau
+Noémie Cartier
+Alexia Jaeggi
+3 JazzBoursier
+Béatrice Garneau
+Noémie Cartier
+Alexia Jaeggi
+3 StreetJazzBoursier
+Béatrice Garneau
+Noémie Cartier
+Alexia Jaeggi
+3 ContemporainBoursier
+Noémie Cartier
+Béatrice Garneau
+Alexia Jaeggi
 

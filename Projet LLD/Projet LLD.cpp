@@ -76,7 +76,7 @@ void lireFichier(string nomFichier, ListNumero& listNumero, ListDanseurs& listDa
 		ListNumero listNumero;
 		ListDanseurs listDanseurs;
 		
-		while (!ws(fichier).eof()) {
+		while (!ws (fichier).eof()) {
 			unsigned nbDanseurs = 0;
 			fichier >> nbDanseurs;
 
