@@ -50,9 +50,10 @@ bool danseurDansList(Danseur* ptrDanseur, ListDanseurs& listDanseurs) {
 }
 
 void ajouterDanseur(Danseur* ptrDanseur, Numero* ptrNumero, ListDanseurs& listDanseurs) {
-	listDanseurs.ptrDanseurs[listDanseurs.nDanseurs] = ptrDanseur;
-	listDanseurs.nDanseurs++;
-	
+	if (!danseurDansList(ptrDanseur,listDanseurs)) {
+		listDanseurs.ptrDanseurs[listDanseurs.nDanseurs] = ptrDanseur;
+		listDanseurs.nDanseurs++;
+	}
 
 	ptrNumero->ptrDanseurs[ptrNumero->nDanseurs] = ptrDanseur;
 	ptrNumero->nDanseurs++;
@@ -72,13 +73,9 @@ void lireFichier(string nomFichier, ListNumero& listNumero, ListDanseurs& listDa
 		cout << "Erreur lors de l'ouverture du fichier" << endl;
 	}
 	else {
-		ListNumero listNumero;
-		ListDanseurs listDanseurs;
-		
 		while (!ws(fichier).eof()) {
 			unsigned nbDanseurs = 0;
 			fichier >> nbDanseurs;
-
 			Numero* ptrNumero = new Numero;
 			getline(fichier, ptrNumero->titre, '\n');
 			ajouterNumero(ptrNumero, listNumero);
@@ -116,8 +113,8 @@ void afficherUnNumero(Numero* ptrnumero) {
 int main()
 {
 	string nomFichier = "Test_LLD3.txt";
-	ListDanseurs listeDeDanseurs;
-	ListNumero listeDeNumeros;
+	ListDanseurs listeDeDanseurs = {};
+	ListNumero listeDeNumeros = {};
 	lireFichier(nomFichier, listeDeNumeros, listeDeDanseurs);
 	cout << listeDeNumeros.nNumero;
 	cout << listeDeDanseurs.nDanseurs;
