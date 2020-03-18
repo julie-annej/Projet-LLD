@@ -91,10 +91,21 @@ void lireFichier(string nomFichier, ListNumero& listNumero, ListDanseurs& listDa
 	}
 }
 
+void afficherUnNumero(Numero* numero) {
+	cout << "Titre: " << numero->titre;
+	for (int i = 0; i < numero->nDanseurs; i++) {
+		cout << numero->ptrDanseurs[i] << " ";
+	}
+}
 
 int main()
 {
 	string nomFichier = "Test_LLD";
-	
+	ListDanseurs listeDeDanseurs;
+	ListNumero listeDeNumeros;
+	lireFichier(nomFichier, listeDeNumeros, listeDeDanseurs);
+	for (int i = 0; i < listeDeNumeros.nNumero; i++)
+		afficherUnNumero(listeDeNumeros.ptrNumero[i]);
+
 }
 
