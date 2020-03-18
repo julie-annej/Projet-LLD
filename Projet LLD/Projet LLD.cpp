@@ -116,8 +116,6 @@ int main()
 	ListDanseurs listeDeDanseurs = {};
 	ListNumero listeDeNumeros = {};
 	lireFichier(nomFichier, listeDeNumeros, listeDeDanseurs);
-	cout << listeDeNumeros.nNumero;
-	cout << listeDeDanseurs.nDanseurs;
 	for (unsigned i = 0; i < listeDeNumeros.nNumero; i++) {
 		afficherUnNumero(listeDeNumeros.ptrNumero[i]);
 	}
