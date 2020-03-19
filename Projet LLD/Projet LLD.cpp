@@ -142,7 +142,7 @@ void sortFromMostconstraint(ListNumero& listNumero) {
 
 void afficherUnNumero(Numero* ptrnumero) {
 	for (unsigned i = 0; i < ptrnumero->nDanseurs; i++) {
-		cout << ptrnumero->ptrDanseurs[i]->nom << " ";
+		cout << ptrnumero->ptrDanseurs[i]->nom << ", ";
 	}
 }
 
