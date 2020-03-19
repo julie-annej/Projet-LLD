@@ -19,6 +19,7 @@ struct Numero {
 	string titre;
 	unsigned nDanseurs = 0;
 	Danseur *ptrDanseurs[80];
+	ListNumero contraintes;
 };
 
 struct Danseur {
@@ -34,7 +35,7 @@ struct ListDanseurs {
 
 struct ListNumero {
 	unsigned nNumero = 0;
-	Numero* ptrNumero[30];
+	Numero* ptrNumero[60];
 };
 
 bool danseurDansList(Danseur* ptrDanseur, ListDanseurs& listDanseurs) {
@@ -89,7 +90,30 @@ void lireFichier(string nomFichier, ListNumero& listNumero, ListDanseurs& listDa
 	}
 }
 
-unsigned cardIntersectionNumero(Numero *ptrNum1, Numero *ptrNum2) {
+bool numeroDansList(Numero* ptrNumero, ListNumero& listNumero) {
+	bool resultat = false;
+	for (unsigned i = 0; i < listNumero.nNumero; i++) {
+		if (ptrNumero == listNumero.ptrNumero[i]) {
+			resultat = true;
+			break;
+		}
+	}
+	return resultat;
+}
+
+ListNumero unionOfNumero(ListDanseurs& listDanseurs) {
+	ListNumero unionOfNumero;
+	for (unsigned i = 0; i < listDanseurs.nDanseurs; i++) {
+		for (unsigned j = 0; j < listDanseurs.ptrDanseurs[i]->nNumero; j++) {
+			if (!numeroDansList(listDanseurs.ptrDanseurs[i]->ptrNumero[j], unionOfNumero)) {
+				ajouterNumero(listDanseurs.ptrDanseurs[i]->ptrNumero[j], unionOfNumero);
+			}
+		}
+	}
+	return unionOfNumero;
+}
+
+ListNumero contraintesNumero(Numero *ptrNum1, Numero *ptrNum2) {
 	ListDanseurs inter;
 	for (unsigned i = 0; i < ptrNum1->nDanseurs; i++) {
 		for (unsigned j = 0; j < ptrNum1->nDanseurs; j++) {
@@ -99,15 +123,30 @@ unsigned cardIntersectionNumero(Numero *ptrNum1, Numero *ptrNum2) {
 			}
 		}
 	}
-	return inter.nDanseurs;
+	ListNumero unionNumero = unionOfNumero(inter);
+	return unionNumero;
 }
 
+void sortFromMostconstraint(ListNumero& listNumero) {
+	for (unsigned i = 0; i < listNumero.nNumero; i++) {
+		for (unsigned j = 0; j < listNumero.nNumero - 1 - i; j++) {
+			if (listNumero.ptrNumero[j]->contraintes.nNumero < listNumero.ptrNumero[j+1]->contraintes.nNumero) {
+				Numero* a = listNumero.ptrNumero[j];
+				Numero* b = listNumero.ptrNumero[j + 1];
+				listNumero.ptrNumero[j] = b;
+				listNumero.ptrNumero[j + 1] = a;
+			}
+		}
+	}
+}
 
 void afficherUnNumero(Numero* ptrnumero) {
 	for (unsigned i = 0; i < ptrnumero->nDanseurs; i++) {
 		cout << ptrnumero->ptrDanseurs[i]->nom << " ";
 	}
 }
+
+
 
 int main()
 {
@@ -122,6 +161,7 @@ int main()
 		cout << listeDeNumeros.ptrNumero[i]->titre << ": ";
 		afficherUnNumero(listeDeNumeros.ptrNumero[i]);
 		cout << endl;
+		
 	}
 }
 
