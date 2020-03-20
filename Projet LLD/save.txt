@@ -1,0 +1,16 @@
+ ContemporainSpeciale 11  Triggerz  JazzAdulte  ClaquetteAdulte  Teaze  Hip-hopAdulte  ClaquetteBoursier  Hip-hopBoursier  BalletBoursier  JazzBoursier  StreetJazzBoursier  ContemporainBoursier 
+ Hip-hopAdulte 9  JazzAdulte  ClaquetteAdulte  ContemporainSpeciale  ClaquetteBoursier  Hip-hopBoursier  BalletBoursier  JazzBoursier  StreetJazzBoursier  ContemporainBoursier 
+ ClaquetteBoursier 8  ContemporainSpeciale  Teaze  Hip-hopAdulte  Hip-hopBoursier  BalletBoursier  JazzBoursier  StreetJazzBoursier  ContemporainBoursier 
+ Hip-hopBoursier 8  ContemporainSpeciale  Teaze  Hip-hopAdulte  ClaquetteBoursier  BalletBoursier  JazzBoursier  StreetJazzBoursier  ContemporainBoursier 
+ BalletBoursier 8  ContemporainSpeciale  Teaze  Hip-hopAdulte  ClaquetteBoursier  Hip-hopBoursier  JazzBoursier  StreetJazzBoursier  ContemporainBoursier 
+ JazzBoursier 8  ContemporainSpeciale  Teaze  Hip-hopAdulte  ClaquetteBoursier  Hip-hopBoursier  BalletBoursier  StreetJazzBoursier  ContemporainBoursier 
+ StreetJazzBoursier 8  ContemporainSpeciale  Teaze  Hip-hopAdulte  ClaquetteBoursier  Hip-hopBoursier  BalletBoursier  JazzBoursier  ContemporainBoursier 
+ ContemporainBoursier 8  ContemporainSpeciale  Teaze  Hip-hopAdulte  ClaquetteBoursier  Hip-hopBoursier  BalletBoursier  JazzBoursier  StreetJazzBoursier 
+ ClaquetteAdulte 7  Triggerz  JazzAdulte  Fauve  ContemporainSpeciale  JazzSpeciale  ContemporainAdulte  Hip-hopAdulte 
+ Teaze 7  ContemporainSpeciale  ClaquetteBoursier  Hip-hopBoursier  BalletBoursier  JazzBoursier  StreetJazzBoursier  ContemporainBoursier 
+ JazzAdulte 6  Triggerz  ClaquetteAdulte  ContemporainSpeciale  JazzSpeciale  ContemporainAdulte  Hip-hopAdulte 
+ JazzSpeciale 4  JazzAdulte  ClaquetteAdulte  ContemporainAdulte  Distribution1 
+ Triggerz 3  JazzAdulte  ClaquetteAdulte  ContemporainSpeciale 
+ ContemporainAdulte 3  JazzAdulte  ClaquetteAdulte  JazzSpeciale 
+ Fauve 1  ClaquetteAdulte 
+ Distribution1 1  JazzSpeciale 

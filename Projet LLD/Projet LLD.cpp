@@ -163,10 +163,15 @@ void eraselistDanseur(ListDanseurs& listDanseurs) {
 }
 
 void saveListNumero(string fileName, ListNumero& listeNumero) {
-
+	ofstream fichier(fileName);
+	for (unsigned i = 0; i < listeNumero.nNumero; i++) {
+		fichier << listeNumero.ptrNumero[i]->titre << " " << listeNumero.ptrNumero[i]->contraintes.nNumero << " ";
+		for (unsigned j = 0; j < listeNumero.ptrNumero[i]->contraintes.nNumero; j++) {
+			fichier << listeNumero.ptrNumero[i]->contraintes.ptrNumero[j]->titre << " ";
+		}
+		fichier << endl;
+	}
 }
-
-
 
 int main()
 {
@@ -193,5 +198,7 @@ int main()
 		}
 		cout << endl;
 	}
+
+	saveListNumero("save.txt", listeDeNumeros);
 }
 
