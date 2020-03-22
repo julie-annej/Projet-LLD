@@ -198,7 +198,6 @@ int main()
 		}
 		cout << endl;
 	}
-
 	saveListNumero("save.txt", listeDeNumeros);
 }
 
