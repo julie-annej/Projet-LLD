@@ -9,6 +9,9 @@
 
 using namespace std;
 
+const unsigned HEURE_ARRIVE = 8 * 60 + 30;
+const unsigned HEURE_DEPART = 6 * 60 + 30;
+
 class Block {
 	public:
 		unsigned start;
@@ -25,18 +28,24 @@ class PlageTemps : public Block {
 	public:
 		unsigned nBlocks = 0;
 		Block* blocks[256];
+		PlageTemps();
+		
 		PlageTemps(const unsigned Cstart, const unsigned Cend) : Block(Cstart, Cend) {
 			blocks[0] = new Block(Cstart, Cend);
 			nBlocks++;
 		}
 	
 		void afficher() {
-			if (nBlocks > 1) {
-				sortStartOrder();
+			if (nBlocks==0) {
+				cout << "VIDE" << endl;
 			}
-	
-			for (unsigned i = 0; i < nBlocks; i++) {
-				cout << blocks[i]->start << endl << blocks[i]->end << endl;
+			else {
+				if (nBlocks > 1) {
+					sortStartOrder();
+				}
+				for (unsigned i = 0; i < nBlocks; i++) {
+					cout << blocks[i]->start << endl << blocks[i]->end << endl;
+				}
 			}
 		}
 	
@@ -102,6 +111,91 @@ class PlageTemps : public Block {
 			}
 		}
 };
+
+class Numero {
+	public:
+		string titre;
+		unsigned nContraintes = 0;
+		Numero* contraintes[30];
+		PlageTemps dispo; //Manque utilisation et enlever plagebloc de la plage de temps et retirer dispo au contraintes
+		
+		Numero(string Ctitre) {
+			titre = Ctitre;
+			dispo = *(new PlageTemps(HEURE_ARRIVE, HEURE_DEPART));
+		}
+		
+		void afficher() {
+			cout << titre << " Contraintes : ";
+			for (unsigned i = 0; i < nContraintes; i++) {
+				cout << contraintes[i] << ", ";
+			}
+			cout << "\b\b" << endl;
+		}
+
+		void addContrainte(Numero* numero) {
+			contraintes[nContraintes] = numero;
+			nContraintes++;
+		}
+};
+
+class Pratique : Block {
+	public:
+		Numero* numero;
+		Pratique(unsigned cStart, unsigned cEnd, Numero* cNumero)
+			: Block(cStart, cEnd)
+		{
+			numero = cNumero;
+		}
+
+		void afficher() {
+			cout << start << endl << numero->titre << endl << end << endl;
+		}
+
+		unsigned getStart() {
+			return start;
+		}
+
+		unsigned getEnd() {
+			return end;
+		}
+};
+
+class Salle {
+	public:
+		string nom;
+		PlageTemps dispo;
+
+		Salle(const unsigned ouverture, const unsigned fermeture, string cNom) {
+			nom = cNom;
+			dispo = *new PlageTemps(ouverture, fermeture);
+		}
+
+		void afficherDispo() {
+			dispo.afficher();
+		}
+
+		void afficherPratique(){
+			for (unsigned i = 0; i < nPratiques; i++) {
+				pratiques[i]->afficher();
+			}
+		}
+
+		bool addPratique(Pratique *ptrPratique) {
+			bool canAddPratique = false;
+			if (dispo.removeBlock(Block(ptrPratique->getStart, ptrPratique->getEnd))) {
+				pratiques[nPratiques] = ptrPratique;
+				nPratiques++;
+			}
+			return canAddPratique;
+		}
+
+	private:
+		unsigned nPratiques = 0;
+		Pratique* pratiques[30];
+
+};
+
+
 
 
 int main()
