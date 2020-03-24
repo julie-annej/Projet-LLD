@@ -49,7 +49,7 @@ class PlageTemps : public Block {
 			}
 		}
 	
-		bool removeBlock(const Block block) {
+		bool removeBlock(Block block) {
 			bool canRemoveBlock = false;
 	
 			if ((block.deltaT <= deltaT) && (nBlocks > 0)) {
@@ -182,9 +182,10 @@ class Salle {
 
 		bool addPratique(Pratique *ptrPratique) {
 			bool canAddPratique = false;
-			if (dispo.removeBlock(Block(ptrPratique->getStart, ptrPratique->getEnd))) {
+			if (dispo.removeBlock(Block(ptrPratique->getStart(), ptrPratique->getEnd()))) {
 				pratiques[nPratiques] = ptrPratique;
 				nPratiques++;
+				canAddPratique = true;
 			}
 			return canAddPratique;
 		}
@@ -203,7 +204,7 @@ int main()
 	PlageTemps horraire(480, 1140);
 	horraire.afficher();
 	cout << endl << endl;
-	if (!horraire.removeBlock(Block(490, 900))) {
+	if (!horraire.removeBlock(Block(480, 900))) {
 		cout << "Impossible de retirer ce block de temps a l'horraire" << endl;
 	};
 	horraire.afficher();
