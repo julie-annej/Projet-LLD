@@ -58,17 +58,20 @@ class PlageTemps : public Block {
 				}
 				for (unsigned i = 0; i < nBlocks; i++) {
 					if (block.deltaT < blocks[i]->deltaT) {
-						canRemoveBlock = true;
-						if (block.start > blocks[i]->start && block.end < blocks[i]->end) {
+						
+					if (block.start > blocks[i]->start && block.end < blocks[i]->end) {
 							blocks[nBlocks] = new Block(block.end, blocks[i]->end);
 							blocks[i]->end = block.start;
 							nBlocks++;
+							canRemoveBlock = true;
 						}
 						if (block.start == blocks[i]->start) {
 							blocks[i]->start = block.end;
+							canRemoveBlock = true;
 						}
 						if (block.end == blocks[i]->end) {
 							blocks[i]->end = block.start;
+							canRemoveBlock = true;
 						}
 						break;
 					}
@@ -92,7 +95,7 @@ class PlageTemps : public Block {
 						Block* a = blocks[j];
 						Block* b = blocks[j + 1];
 						blocks[j] = b;
-						blocks[j + 1] = a;;
+						blocks[j + 1] = a;
 					}
 				}
 			}
@@ -138,7 +141,7 @@ class Numero {
 		}
 };
 
-class Pratique : Block {
+class Pratique : public Block {
 	public:
 		Numero* numero;
 		Pratique(unsigned cStart, unsigned cEnd, Numero* cNumero)
@@ -201,12 +204,12 @@ class Salle {
 
 int main()
 {
-	PlageTemps horraire(480, 1140);
-	horraire.afficher();
+	PlageTemps horaire(480, 1140);
+	horaire.afficher();
 	cout << endl << endl;
-	if (!horraire.removeBlock(Block(480, 900))) {
-		cout << "Impossible de retirer ce block de temps a l'horraire" << endl;
+	if (!horaire.removeBlock(Block(470, 900))) {
+		cout << "Impossible de retirer ce block de temps a l'horaire" << endl;
 	};
-	horraire.afficher();
+	horaire.afficher();
 }
 
