@@ -2,15 +2,19 @@
 //
 
 #include <iostream>
-#include <iostream>
-#include <iostream>
 #include <string>
 #include <stdio.h>
+#include <fstream>
 
 using namespace std;
 
 const unsigned HEURE_ARRIVE = 8 * 60 + 30;
-const unsigned HEURE_DEPART = 6 * 60 + 30;
+const unsigned HEURE_DEPART = 18 * 60 + 30;
+
+const unsigned TEMPS_PRATIQUE = 25;
+const unsigned TEMPS_SCENE = 15;
+
+
 
 class Block {
 	public:
@@ -28,8 +32,8 @@ class PlageTemps : public Block {
 	public:
 		unsigned nBlocks = 0;
 		Block* blocks[256];
-		PlageTemps();
-		
+		PlageTemps(char* = nullptr) : Block(NULL,NULL) {};
+
 		PlageTemps(const unsigned Cstart, const unsigned Cend) : Block(Cstart, Cend) {
 			blocks[0] = new Block(Cstart, Cend);
 			nBlocks++;
@@ -58,8 +62,7 @@ class PlageTemps : public Block {
 				}
 				for (unsigned i = 0; i < nBlocks; i++) {
 					if (block.deltaT < blocks[i]->deltaT) {
-						
-					if (block.start > blocks[i]->start && block.end < blocks[i]->end) {
+						if (block.start > blocks[i]->start && block.end < blocks[i]->end) {
 							blocks[nBlocks] = new Block(block.end, blocks[i]->end);
 							blocks[i]->end = block.start;
 							nBlocks++;
@@ -141,6 +144,61 @@ class Numero {
 		}
 };
 
+class ListeNumero {
+public:
+	Numero* numero[30] = {};
+	unsigned nNumero = 0;
+	
+	Numero* searchAdress(const string& titre) {
+		Numero* ptrNumero = 0;
+		bool notFound = true;
+		for (unsigned i = 0; i < nNumero && notFound; i++) {
+			if (numero[i]->titre == titre) {
+				notFound = false;
+				ptrNumero = numero[i];
+			}
+		}
+		return ptrNumero;
+	}
+
+	void addContrainte(const string& titre, Numero* numero) {
+		numero->addContrainte(searchAdress(titre));
+	}
+	
+	void loadFrom(const string& fileName) {
+		ifstream file(fileName);
+		file >> nNumero;
+		for (unsigned i = 0; i < nNumero; i++) {
+			string titre;
+			file >> titre;
+			Numero* ptrNum = new Numero(titre);
+			numero[i] = ptrNum;
+		}
+
+		for (unsigned i = 0; i < nNumero; i++) {
+			unsigned nContraintes;
+			file >> nContraintes;
+			for (unsigned j = 0; j < nContraintes; j++) {
+				string contrainte;
+				file >> contrainte;
+
+				addContrainte(contrainte, numero[i]);
+			}
+		}
+	}
+
+	void afficher() {
+		for (unsigned i = 0; i < nNumero; i++) {
+			cout << numero[i]->titre << " contraintes : ";
+			for (unsigned j = 0; j < numero[i]->nContraintes; j++) {
+				cout << numero[i]->contraintes[j]->titre << ", ";
+			}
+			cout << "\b\b" << endl;
+		}
+	}
+
+};
+
 class Pratique : public Block {
 	public:
 		Numero* numero;
@@ -196,20 +254,34 @@ class Salle {
 	private:
 		unsigned nPratiques = 0;
 		Pratique* pratiques[30];
+};
+
+class Horraire {
+public:
+	Horraire() {
+
+	}
+	
+	void afficher(){
+	
+	}
+private:
 
 };
 
 
-
-
 int main()
 {
-	PlageTemps horaire(480, 1140);
+	/*PlageTemps horaire(480, 1140);
 	horaire.afficher();
 	cout << endl << endl;
 	if (!horaire.removeBlock(Block(470, 900))) {
 		cout << "Impossible de retirer ce block de temps a l'horaire" << endl;
 	};
-	horaire.afficher();
+	horaire.afficher();*/
+
+	ListeNumero listeNumero;
+	listeNumero.loadFrom("save.txt");
+	listeNumero.afficher();
 }
 

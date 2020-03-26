@@ -164,8 +164,12 @@ void eraselistDanseur(ListDanseurs& listDanseurs) {
 
 void saveListNumero(string fileName, ListNumero& listeNumero) {
 	ofstream fichier(fileName);
+	fichier << listeNumero.nNumero << " ";
 	for (unsigned i = 0; i < listeNumero.nNumero; i++) {
-		fichier << listeNumero.ptrNumero[i]->titre << " " << listeNumero.ptrNumero[i]->contraintes.nNumero << " ";
+		fichier << listeNumero.ptrNumero[i]->titre << " ";
+	}
+	for (unsigned i = 0; i < listeNumero.nNumero; i++) {
+		fichier << listeNumero.ptrNumero[i]->contraintes.nNumero << " ";
 		for (unsigned j = 0; j < listeNumero.ptrNumero[i]->contraintes.nNumero; j++) {
 			fichier << listeNumero.ptrNumero[i]->contraintes.ptrNumero[j]->titre << " ";
 		}
