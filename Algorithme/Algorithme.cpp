@@ -309,7 +309,7 @@ public:
 		}
 	}
 	
-	void afficher(){ //il reste a  corriger le bug de la plage horraire pas vrai heure commncement et fin
+	void afficher(){
 		
 		for(Salle* salle : salles){
 			cout << setw(20) <<  salle->nom << " ";
@@ -324,7 +324,7 @@ public:
 					if (salles[i]->pratiques[P[i]]->getStart() <= t) {
 						cout << setw(25) << salles[i]->pratiques[P[i]]->numero->titre;
 					}
-					if (salles[i]->pratiques[P[i]]->getEnd() == t) {
+					if (salles[i]->pratiques[P[i]]->getEnd() == t+5) {
 						P[i]++;
 					}
 				}
