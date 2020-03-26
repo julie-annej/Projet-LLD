@@ -107,7 +107,6 @@ class PlageTemps : public Block {
 			return canRemoveBlock;
 		}
 	
-	private:
 		void sortStartOrder() {
 			for (unsigned i = 0; i < nBlocks; i++) {
 				for (unsigned j = 0; j < nBlocks - 1 - i; j++) {
@@ -140,8 +139,9 @@ class Numero {
 		string titre;
 		unsigned nContraintes = 0;
 		Numero* contraintes[30];
-		PlageTemps dispo; //Manque utilisation et enlever plagebloc de la plage de temps et retirer dispo au contraintes
-		
+		unsigned nContraintesAPlacer = 0;
+		PlageTemps dispo;
+
 		Numero(string Ctitre) {
 			titre = Ctitre;
 			dispo = *(new PlageTemps(HEURE_ARRIVE, HEURE_DEPART));
@@ -158,6 +158,12 @@ class Numero {
 		void addContrainte(Numero* numero) {
 			contraintes[nContraintes] = numero;
 			nContraintes++;
+			nContraintesAPlacer++;
+		}
+
+		void removeBlockDispo(Block block) {
+			dispo.removeBlock(block);
+			
 		}
 };
 
@@ -202,6 +208,8 @@ public:
 				addContrainte(contrainte, numero[i]);
 			}
 		}
+
+	
 	}
 
 	void afficher() {
@@ -213,6 +221,19 @@ public:
 			cout << "\b\b" << endl;
 		}
 	}
+
+	void sortbyNContraintesAPlacer(unsigned from) {
+		for (unsigned i = from; i < nNumero; i++) {
+			for (unsigned j = from; j < nNumero - 1 - i; j++) {
+				if (numero[j]->nContraintesAPlacer < numero[j + 1]->nContraintesAPlacer) {
+					Numero* a = numero[j];
+					Numero* b = numero[j + 1];
+					numero[j] = b;
+					numero[j + 1] = a;
+				}
+			}
+		}
+	}
 };
 
 class Pratique : public Block {
@@ -222,10 +243,16 @@ public:
 		: Block(cStart, cEnd)
 	{
 		numero = cNumero;
+		numero->removeBlockDispo(Block(cStart, cEnd));
+		for (unsigned i = 0; i < numero->nContraintes; i++) {
+			numero->contraintes[i]->removeBlockDispo(Block(cStart, cEnd));
+			numero->contraintes[i]->nContraintesAPlacer--;
+		}
+
 	}
 
 	void afficher() {
-		cout << start << endl << numero->titre << endl << end << endl;
+		cout << start << endl << numero->titre << endl << end << endl << endl;
 	}
 
 	unsigned getStart() {
@@ -244,7 +271,7 @@ public:
 	unsigned nPratiques = 0;
 	Pratique* pratiques[30];
 
-	Salle(const unsigned ouverture, const unsigned fermeture, string cNom) {
+	Salle(const unsigned ouverture, const unsigned fermeture, const string cNom) {
 		nom = cNom;
 		dispo = *new PlageTemps(ouverture, fermeture);
 	}
@@ -253,21 +280,24 @@ public:
 		dispo.afficher();
 	}
 
-	void afficherPratique(){
+	void afficherPratiques(){
 		for (unsigned i = 0; i < nPratiques; i++) {
 			pratiques[i]->afficher();
 		}
 	}
 
-	bool addPratique(Pratique *ptrPratique) {
+	bool addPratique(Pratique* pratique) {
 		bool canAddPratique = false;
-		if (dispo.removeBlock(Block(ptrPratique->getStart(), ptrPratique->getEnd()))) {
-			pratiques[nPratiques] = ptrPratique;
+		
+		if (dispo.removeBlock(Block(pratique->getStart(), pratique->getEnd()))) {
+			pratiques[nPratiques] = pratique;
 			nPratiques++;
 			canAddPratique = true;
 		}
+
 		return canAddPratique;
-	}	
+	}
+
 };
 
 class Horraire {
@@ -279,22 +309,22 @@ public:
 		}
 	}
 	
-	void afficher(){
-		cout << "\t";
+	void afficher(){ //il reste a  corriger le bug de la plage horraire pas vrai heure commncement et fin
+		
 		for(Salle* salle : salles){
-			cout << setw(10) <<  salle->nom << " ";
+			cout << setw(20) <<  salle->nom << " ";
 		}
 		cout << endl;
 		
-		unsigned P[] = { 0,0,0 };
-		for (unsigned i = HEURE_ARRIVE; i <= HEURE_DEPART; i += 5) {
-			cout << i;
-			for (unsigned i = 0; i < 3; i++) {
+		unsigned P[] = { 0, 0, 0 };
+		for (unsigned t = HEURE_ARRIVE; t <= HEURE_DEPART; t += 5) {
+			cout << t;
+			for (unsigned i = 0; i < 3; ++i) {
 				if (P[i]<salles[i]->nPratiques) {
-					if (salles[i]->pratiques[P[i]]->getStart() >= i) {
-						cout << setw(10) << salles[i]->pratiques[P[i]]->numero->titre;
+					if (salles[i]->pratiques[P[i]]->getStart() <= t) {
+						cout << setw(25) << salles[i]->pratiques[P[i]]->numero->titre;
 					}
-					if (salles[i]->pratiques[P[i]]->getEnd() == i) {
+					if (salles[i]->pratiques[P[i]]->getEnd() == t) {
 						P[i]++;
 					}
 				}
@@ -303,8 +333,45 @@ public:
 		}
 	}
 
-	void organize() {
+	//void afficher() {
+	//	for (Salle* salle : salles) {
+	//		cout << setw(10) << salle->nom << " ";
+	//	}
+	//	for (Salle* salle : salles) {
+	//		salle->afficherPratiques();
+	//	}
+	//}
+	
+	void findBestBlockInBestSalle(unsigned& bestBlock, unsigned& bestSalle) {//need update tenant compte des dispo et des deux salles (bug)
+		unsigned startMin = INFINITY;
+		for (unsigned i = 0; i < 3-1; i++) {
+			salles[i]->dispo.sortStartOrder();
+			for (unsigned j = 0; j < salles[i]->dispo.nBlocks; j++) {
+				if (salles[i]->dispo.blocks[j]->start < startMin && 
+					salles[i]->dispo.blocks[j]->deltaT >= TEMPS_PRATIQUE) 
+				{
+					bestSalle = i;
+					bestBlock = j;
+					startMin = salles[i]->dispo.blocks[j]->start;
+				}
+			}
+		}
+	}
 
+	void organize() {
+		for (unsigned i = 0; i < listNumero.nNumero; i++) {
+			listNumero.sortbyNContraintesAPlacer(i);
+			unsigned bestsalle = 0;
+			unsigned bestBlock = 0;
+			findBestBlockInBestSalle(bestBlock, bestsalle);
+			Pratique* pratique = new Pratique(salles[bestsalle]->dispo.blocks[bestBlock]->start, 
+											  salles[bestsalle]->dispo.blocks[bestBlock]->start + TEMPS_PRATIQUE,
+											  listNumero.numero[i]);
+			cout << "Salle : " << bestsalle << endl;
+			pratique->afficher();
+			
+			salles[bestsalle]->addPratique(pratique);
+		}
 	}
 
 private:
