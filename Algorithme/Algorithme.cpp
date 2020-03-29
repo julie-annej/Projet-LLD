@@ -10,7 +10,7 @@
 using namespace std;
 
 const unsigned HEURE_ARRIVE = 8 * 60 + 30;
-const unsigned HEURE_DEPART = 10*18 * 60 + 30;
+const unsigned HEURE_DEPART = 960;
 
 const unsigned TEMPS_PRATIQUE = 25;
 const unsigned TEMPS_SCENE = 15;
@@ -31,10 +31,31 @@ class Block {
 		void updateDeltaT() {
 			deltaT = end - start;
 		}
+
+		Block interBlock(Block* block2) {
+			unsigned newStart = 0, newEnd = 0;
+			if (end >= block2->start && block2->end >= start) {
+				if (start <= block2->start) {
+					newStart = block2->start;
+				}
+				if (block2->start < start) {
+					newStart = start;
+				}
+
+				if (end <= block2->end) {
+					newEnd = end;
+				}
+				if (block2->end < end) {
+					newEnd = block2->end;
+				}
+			}
+			return Block(newStart, newEnd);
+		}
 };
 
 class PlageTemps : public Block {
 	public:
+		const unsigned nBlockMax = 256;
 		unsigned nBlocks = 0;
 		Block* blocks[256];
 		PlageTemps(char* = nullptr) : Block(NULL,NULL) {};
@@ -58,7 +79,7 @@ class PlageTemps : public Block {
 			}
 		}
 	
-		bool removeBlock(Block block) {
+		bool removeBlock(const Block block) {
 			bool canRemoveBlock = false;
 	
 			if ((block.deltaT <= deltaT) && (nBlocks > 0)) {
@@ -132,6 +153,83 @@ class PlageTemps : public Block {
 				}
 			}
 		}
+		
+		void removeWOSecu(Block block) {
+			if (nBlocks > 0) {
+				if (nBlocks > 1) {
+					sortStartOrder();
+				}
+
+				for (unsigned i = 0; i < nBlocks; i++) {
+					if (blocks[i]->end >= block.start && block.end >= blocks[i]->start) {
+						if (block.start > blocks[i]->start && block.end < blocks[i]->end) {
+							blocks[nBlocks] = new Block(block.end, blocks[i]->end);
+							blocks[i]->end = block.start;
+							blocks[i]->updateDeltaT();
+							nBlocks++;
+						}
+
+						if (block.start <= blocks[i]->start && block.end < blocks[i]->end) {
+							blocks[i]->start = block.end;
+							blocks[i]->updateDeltaT();
+						}
+						if (blocks[i]->end <= block.end && blocks[i]->start < block.start) {
+							blocks[i]->end = block.start;
+							blocks[i]->updateDeltaT();
+						}
+
+
+						if (blocks[i]->start >= block.start && blocks[i]->end <= block.end) {
+							delete blocks[i];
+							Block* a;
+							Block* b;
+							for (unsigned j = i; j < nBlocks - 1 - i; j++) {
+								a = blocks[j];
+								b = blocks[j + 1];
+								blocks[j] = b;
+								blocks[j + 1] = a;;
+							}
+							nBlocks--;
+							break;
+						}
+					}
+				}
+				sortStartOrder();
+			}
+		}
+
+		PlageTemps reverse() { // a verifier
+			PlageTemps reverse(start,end);
+			for (unsigned i = 0; i < nBlocks; i++) {
+				reverse.removeWOSecu(*blocks[i]);
+			}
+			return reverse;
+		}
+
+		PlageTemps interPlage(PlageTemps& plageTemps1) {
+			Block interPlageBlock = this->interBlock(&plageTemps1);
+			PlageTemps plageCommuneReverse = PlageTemps(interPlageBlock.start, interPlageBlock.end);
+			
+			/*cout << "Plage commune : ";
+			plageCommune.afficher();*/
+			//if (end >= plageTemps1.start && plageTemps1.end >= start) {
+			
+			if (interPlageBlock.deltaT > 0) {
+				for (unsigned i = 0; i < nBlocks; i++) {
+					for (unsigned j = 0; j < plageTemps1.nBlocks; j++) {
+						Block inter = blocks[i]->interBlock(plageTemps1.blocks[j]);
+						//cout << inter.start << " " << inter.end << endl;
+						if (inter.deltaT > 0) {
+							plageCommuneReverse.removeWOSecu(inter);
+						}
+					}
+				}
+			}
+			PlageTemps plageCommuneVrai = plageCommuneReverse.reverse();
+			/*cout << "Plage commune : ";
+			plageCommune.afficher();*/
+			return plageCommuneVrai;
+		}	
 };
 
 class Numero {
@@ -140,11 +238,11 @@ class Numero {
 		unsigned nContraintes = 0;
 		Numero* contraintes[30];
 		unsigned nContraintesAPlacer = 0;
-		PlageTemps dispo;
+		PlageTemps *dispo;
 
 		Numero(string Ctitre) {
 			titre = Ctitre;
-			dispo = *(new PlageTemps(HEURE_ARRIVE, HEURE_DEPART));
+			dispo = new PlageTemps(HEURE_ARRIVE, HEURE_DEPART);
 		}
 		
 		void afficher() {
@@ -162,7 +260,7 @@ class Numero {
 		}
 
 		void removeBlockDispo(Block block) {
-			dispo.removeBlock(block);
+			dispo->removeBlock(block);
 			
 		}
 };
@@ -267,17 +365,17 @@ public:
 class Salle {
 public:
 	string nom;
-	PlageTemps dispo;
+	PlageTemps * dispo;
 	unsigned nPratiques = 0;
 	Pratique* pratiques[30];
 
 	Salle(const unsigned ouverture, const unsigned fermeture, const string cNom) {
 		nom = cNom;
-		dispo = *new PlageTemps(ouverture, fermeture);
+		dispo = new PlageTemps(ouverture, fermeture);
 	}
 
 	void afficherDispo() {
-		dispo.afficher();
+		dispo->afficher();
 	}
 
 	void afficherPratiques(){
@@ -289,13 +387,26 @@ public:
 	bool addPratique(Pratique* pratique) {
 		bool canAddPratique = false;
 		
-		if (dispo.removeBlock(Block(pratique->getStart(), pratique->getEnd()))) {
+		if (dispo->removeBlock(Block(pratique->getStart(), pratique->getEnd()))) {
 			pratiques[nPratiques] = pratique;
 			nPratiques++;
 			canAddPratique = true;
 		}
 
 		return canAddPratique;
+	}
+
+	void sortPratiquesStartOrder() {
+		for (unsigned i = 0; i < nPratiques; i++) {
+			for (unsigned j = 0; j < nPratiques - 1 - i; j++) {
+				if (pratiques[j]->start > pratiques[j + 1]->start) {
+					Pratique* a = pratiques[j];
+					Pratique* b = pratiques[j + 1];
+					pratiques[j] = b;
+					pratiques[j + 1] = a;
+				}
+			}
+		}
 	}
 
 };
@@ -313,6 +424,7 @@ public:
 		
 		for(Salle* salle : salles){
 			cout << setw(20) <<  salle->nom << " ";
+			salle->sortPratiquesStartOrder();
 		}
 		cout << endl;
 		
@@ -342,35 +454,60 @@ public:
 	//	}
 	//}
 	
-	void findBestBlockInBestSalle(unsigned& bestBlock, unsigned& bestSalle) {//need update tenant compte des dispo et des deux salles (bug)
-		unsigned startMin = INFINITY;
-		for (unsigned i = 0; i < 3-1; i++) {
-			salles[i]->dispo.sortStartOrder();
-			for (unsigned j = 0; j < salles[i]->dispo.nBlocks; j++) {
-				if (salles[i]->dispo.blocks[j]->start < startMin && 
-					salles[i]->dispo.blocks[j]->deltaT >= TEMPS_PRATIQUE) 
+	Block bestBlockInBestSalle(unsigned& bestSalle, Numero* numero, const unsigned duree) {
+		unsigned startMin = 10000000;
+		for (unsigned i = 0; i < 2; i++) {
+			PlageTemps interDispo = salles[i]->dispo->interPlage(*numero->dispo);
+			
+			interDispo.sortStartOrder();
+			/*cout << numero->titre << " Reeldispo : ";
+			interDispo.afficher();*/
+			for (unsigned j = 0; j < interDispo.nBlocks; j++) {
+				
+				if (interDispo.blocks[j]->start < startMin &&
+					interDispo.blocks[j]->deltaT >= TEMPS_PRATIQUE)
 				{
 					bestSalle = i;
-					bestBlock = j;
-					startMin = salles[i]->dispo.blocks[j]->start;
+					startMin = interDispo.blocks[j]->start;
 				}
 			}
 		}
+		return Block(startMin, startMin + duree);
+	}
+
+	Block bestBlockInScene(Numero* numero, const unsigned duree) {
+		PlageTemps interDispo = salles[2]->dispo->interPlage(*numero->dispo);
+		interDispo.sortStartOrder();
+		
+		unsigned startMin = 10000000;
+
+		for (unsigned i = 0; i < interDispo.nBlocks; i++) {
+			if (interDispo.blocks[i]->start < startMin &&
+				interDispo.blocks[i]->deltaT >= TEMPS_PRATIQUE)
+			{
+				startMin = interDispo.blocks[i]->start;
+			}
+		}
+		
+		return Block(startMin, startMin + duree);
 	}
 
 	void organize() {
 		for (unsigned i = 0; i < listNumero.nNumero; i++) {
 			listNumero.sortbyNContraintesAPlacer(i);
-			unsigned bestsalle = 0;
-			unsigned bestBlock = 0;
-			findBestBlockInBestSalle(bestBlock, bestsalle);
-			Pratique* pratique = new Pratique(salles[bestsalle]->dispo.blocks[bestBlock]->start, 
-											  salles[bestsalle]->dispo.blocks[bestBlock]->start + TEMPS_PRATIQUE,
-											  listNumero.numero[i]);
-			cout << "Salle : " << bestsalle << endl;
-			pratique->afficher();
+			unsigned bestSalle = 0;
+			Block bestSalleBlock = bestBlockInBestSalle(bestSalle, listNumero.numero[i], TEMPS_PRATIQUE);
+			Pratique* pratiqueSalle = new Pratique(bestSalleBlock.start, bestSalleBlock.end, listNumero.numero[i]);
+			cout << "Salle : " << bestSalle << endl;
+			pratiqueSalle->afficher();
 			
-			salles[bestsalle]->addPratique(pratique);
+			salles[bestSalle]->addPratique(pratiqueSalle);
+			
+			Block bestSceneBlock = bestBlockInScene(listNumero.numero[i], TEMPS_SCENE);
+			Pratique* pratiqueScene = new Pratique(bestSceneBlock.start, bestSceneBlock.end, listNumero.numero[i]);
+			cout << "Scene : " << endl;
+			pratiqueScene->afficher();
+			salles[2]->addPratique(pratiqueScene);
 		}
 	}
 
@@ -400,6 +537,24 @@ int main()
 	/*ListeNumero listeNumero;
 	listeNumero.loadFrom("save.txt");
 	listeNumero.afficher();*/
+
+	//PlageTemps p1(480, 1140);
+	//PlageTemps p2(600, 900);
+	//p2.removeWOSecu(Block(700, 800));
+	//PlageTemps interP = p1.interPlage(p2); //marche pour tout les cas
+	//interP.afficher();
+
+	//cout << endl;
+
+	//p1.removeWOSecu(Block(700, 1000));//marche
+	//p1.afficher();
+
+	/*Block b1(480, 900);
+	Block b2(901, 1000);
+
+	Block interB = b1.interBlock(&b2);
+	cout << interB.start << " " << interB.end << endl;*/ // working 
+
 
 	Horraire horraire;
 	horraire.organize();
