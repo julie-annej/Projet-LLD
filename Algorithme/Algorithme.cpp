@@ -16,221 +16,221 @@ const unsigned TEMPS_PRATIQUE = 25;
 const unsigned TEMPS_SCENE = 15;
 
 class Block {
-	public:
-		unsigned start;
-		unsigned end;
-		unsigned deltaT;
-		Block(const unsigned Cstart, const unsigned Cend) {
-			start = Cstart;
-			end = Cend;
-			deltaT = Cend - Cstart;
-		}
+public:
+	unsigned start;
+	unsigned end;
+	unsigned deltaT;
+	Block(const unsigned Cstart, const unsigned Cend) {
+		start = Cstart;
+		end = Cend;
+		deltaT = Cend - Cstart;
+	}
 
-		void updateDeltaT() {
-			deltaT = end - start;
-		}
+	void updateDeltaT() {
+		deltaT = end - start;
+	}
 
-		Block interBlock(Block* block2) {
-			unsigned newStart = 0, newEnd = 0;
-			if (end >= block2->start && block2->end >= start) {
-				if (start <= block2->start) {
-					newStart = block2->start;
-				}
-				if (block2->start < start) {
-					newStart = start;
-				}
-
-				if (end <= block2->end) {
-					newEnd = end;
-				}
-				if (block2->end < end) {
-					newEnd = block2->end;
-				}
+	Block interBlock(Block* block2) {
+		unsigned newStart = 0, newEnd = 0;
+		if (end >= block2->start && block2->end >= start) {
+			if (start <= block2->start) {
+				newStart = block2->start;
 			}
-			return Block(newStart, newEnd);
+			if (block2->start < start) {
+				newStart = start;
+			}
+
+			if (end <= block2->end) {
+				newEnd = end;
+			}
+			if (block2->end < end) {
+				newEnd = block2->end;
+			}
 		}
+		return Block(newStart, newEnd);
+	}
 };
 
 class PlageTemps : public Block {
-	public:
-		const unsigned nBlockMax = 256;
-		unsigned nBlocks = 0;
-		Block* blocks[256];
+public:
+	const unsigned nBlockMax = 256;
+	unsigned nBlocks = 0;
+	Block* blocks[256];
 
-		PlageTemps(char* = nullptr) : Block(NULL,NULL) {};
+	PlageTemps(char* = nullptr) : Block(NULL,NULL) {};
 
-		PlageTemps(const unsigned Cstart, const unsigned Cend) : Block(Cstart, Cend) {
-			blocks[0] = new Block(Cstart, Cend);
-			nBlocks++;
+	PlageTemps(const unsigned Cstart, const unsigned Cend) : Block(Cstart, Cend) {
+		blocks[0] = new Block(Cstart, Cend);
+		nBlocks++;
+	}
+
+	void afficher() {
+		if (nBlocks==0) {
+			cout << "VIDE" << endl;
 		}
-	
-		void afficher() {
-			if (nBlocks==0) {
-				cout << "VIDE" << endl;
+		else {
+			if (nBlocks > 1) {
+				sortStartOrder();
 			}
-			else {
-				if (nBlocks > 1) {
-					sortStartOrder();
-				}
-				for (unsigned i = 0; i < nBlocks; i++) {
-					cout << blocks[i]->start << endl << blocks[i]->end << endl;
-				}
+			for (unsigned i = 0; i < nBlocks; i++) {
+				cout << blocks[i]->start << endl << blocks[i]->end << endl;
 			}
 		}
-	
-		bool removeBlock(const Block block) {
-			bool canRemoveBlock = false;
-	
-			if ((block.deltaT <= deltaT) && (nBlocks > 0)) {
-				if (nBlocks > 1) {
-					sortStartOrder();
-				}
-				for (unsigned i = 0; i < nBlocks; i++) {
-					if (block.deltaT < blocks[i]->deltaT) {
-						if (block.start > blocks[i]->start && block.end < blocks[i]->end) {
-							blocks[nBlocks] = new Block(block.end, blocks[i]->end);
-							blocks[i]->end = block.start;
-							blocks[i]->updateDeltaT();
-							nBlocks++;
-							canRemoveBlock = true;
-						}
-						if (block.start == blocks[i]->start) {
-							blocks[i]->start = block.end;
-							blocks[i]->updateDeltaT();
-							canRemoveBlock = true;
-						}
-						if (block.end == blocks[i]->end) {
-							blocks[i]->end = block.start;
-							blocks[i]->updateDeltaT();
-							canRemoveBlock = true;
-						}
-						break;
-					}
-	
-					if (block.deltaT == blocks[i]->deltaT) {
+	}
+
+	bool removeBlock(const Block block) {
+		bool canRemoveBlock = false;
+
+		if ((block.deltaT <= deltaT) && (nBlocks > 0)) {
+			if (nBlocks > 1) {
+				sortStartOrder();
+			}
+			for (unsigned i = 0; i < nBlocks; i++) {
+				if (block.deltaT < blocks[i]->deltaT) {
+					if (block.start > blocks[i]->start && block.end < blocks[i]->end) {
+						blocks[nBlocks] = new Block(block.end, blocks[i]->end);
+						blocks[i]->end = block.start;
+						blocks[i]->updateDeltaT();
+						nBlocks++;
 						canRemoveBlock = true;
-						delete blocks[i];
-						Block* a;
-						Block* b;
-						for (unsigned j = i; j < nBlocks - 1 - i; j++) {
-							a = blocks[j];
-							b = blocks[j + 1];
-							blocks[j] = b;
-							blocks[j + 1] = a;;
-						}
-						nBlocks--;
-						break;
 					}
-				}
-			}
-			return canRemoveBlock;
-		}
-	
-		void sortStartOrder() {
-			for (unsigned i = 0; i < nBlocks; i++) {
-				for (unsigned j = 0; j < nBlocks - 1 - i; j++) {
-					if (blocks[j]->start > blocks[j + 1]->start) {
-						Block* a = blocks[j];
-						Block* b = blocks[j + 1];
-						blocks[j] = b;
-						blocks[j + 1] = a;
+					if (block.start == blocks[i]->start) {
+						blocks[i]->start = block.end;
+						blocks[i]->updateDeltaT();
+						canRemoveBlock = true;
 					}
+					if (block.end == blocks[i]->end) {
+						blocks[i]->end = block.start;
+						blocks[i]->updateDeltaT();
+						canRemoveBlock = true;
+					}
+					break;
 				}
-			}
-		}
-	
-		void sortDeltaTOrder() {
-			for (unsigned i = 0; i < nBlocks; i++) {
-				for (unsigned j = 0; j < nBlocks - 1 - i; j++) {
-					if (blocks[j]->deltaT > blocks[j + 1]->deltaT) {
-						Block* a = blocks[j];
-						Block* b = blocks[j + 1];
+
+				if (block.deltaT == blocks[i]->deltaT) {
+					canRemoveBlock = true;
+					delete blocks[i];
+					Block* a;
+					Block* b;
+					for (unsigned j = i; j < nBlocks - 1 - i; j++) {
+						a = blocks[j];
+						b = blocks[j + 1];
 						blocks[j] = b;
 						blocks[j + 1] = a;;
 					}
+					nBlocks--;
+					break;
 				}
 			}
 		}
-		
-		void removeWOSecu(Block block) {
-			if (nBlocks > 0) {
-				if (nBlocks > 1) {
-					sortStartOrder();
+		return canRemoveBlock;
+	}
+
+	void sortStartOrder() {
+		for (unsigned i = 0; i < nBlocks; i++) {
+			for (unsigned j = 0; j < nBlocks - 1 - i; j++) {
+				if (blocks[j]->start > blocks[j + 1]->start) {
+					Block* a = blocks[j];
+					Block* b = blocks[j + 1];
+					blocks[j] = b;
+					blocks[j + 1] = a;
 				}
-				bool firstZero = true;
-				unsigned iZStart = 0, nZ = 0;
+			}
+		}
+	}
 
-				for (unsigned i = 0; i < nBlocks; i++) {
-					if (blocks[i]->end >= block.start && block.end >= blocks[i]->start) {
-						if (block.start > blocks[i]->start && block.end < blocks[i]->end) {
-							blocks[nBlocks] = new Block(block.end, blocks[i]->end);
-							blocks[i]->end = block.start;
-							blocks[i]->updateDeltaT();
-							nBlocks++;
-						}
-
-						if (block.start <= blocks[i]->start && block.end < blocks[i]->end) {
-							blocks[i]->start = block.end;
-							blocks[i]->updateDeltaT();
-						}
-						if (blocks[i]->end <= block.end && blocks[i]->start < block.start) {
-							blocks[i]->end = block.start;
-							blocks[i]->updateDeltaT();
-						}
-
-
-						if (blocks[i]->start >= block.start && blocks[i]->end <= block.end) {
-							delete blocks[i];
-							nZ++;
-							if (firstZero) {
-								iZStart = i;
-								firstZero = false;
-							}
-						}
-					}
-					if (nZ > 0) {
-						Block* a;
-						Block* b;
-						for (unsigned i = iZStart; i < nBlocks - nZ - iZStart; i++) {
-							a = blocks[i];
-							b = blocks[i + 1];
-							blocks[i] = b;
-							blocks[i + nZ] = a;
-							nBlocks--;
-						}
-						
-					}
+	void sortDeltaTOrder() {
+		for (unsigned i = 0; i < nBlocks; i++) {
+			for (unsigned j = 0; j < nBlocks - 1 - i; j++) {
+				if (blocks[j]->deltaT > blocks[j + 1]->deltaT) {
+					Block* a = blocks[j];
+					Block* b = blocks[j + 1];
+					blocks[j] = b;
+					blocks[j + 1] = a;;
+				}
+			}
+		}
+	}
 	
-				}
+	void removeWOSecu(Block block) {
+		if (nBlocks > 0) {
+			if (nBlocks > 1) {
 				sortStartOrder();
 			}
-		}
+			bool firstZero = true;
+			unsigned iZStart = 0, nZ = 0;
 
-		PlageTemps reverse() {
-			PlageTemps reverse(start,end);
 			for (unsigned i = 0; i < nBlocks; i++) {
-				reverse.removeWOSecu(*blocks[i]);
-			}
-			return reverse;
-		}
+				if (blocks[i]->end >= block.start && block.end >= blocks[i]->start) {
+					if (block.start > blocks[i]->start && block.end < blocks[i]->end) {
+						blocks[nBlocks] = new Block(block.end, blocks[i]->end);
+						blocks[i]->end = block.start;
+						blocks[i]->updateDeltaT();
+						nBlocks++;
+					}
 
-		PlageTemps interPlage(PlageTemps& plageTemps1) {
-			Block interPlageBlock = this->interBlock(&plageTemps1);
-			PlageTemps plageCommuneReverse = PlageTemps(interPlageBlock.start, interPlageBlock.end);
-			
-			if (interPlageBlock.deltaT > 0) {
-				for (unsigned i = 0; i < nBlocks; i++) {
-					for (unsigned j = 0; j < plageTemps1.nBlocks; j++) {
-						Block inter = blocks[i]->interBlock(plageTemps1.blocks[j]);
-						if (inter.deltaT > 0) {
-							plageCommuneReverse.removeWOSecu(inter);
+					if (block.start <= blocks[i]->start && block.end < blocks[i]->end) {
+						blocks[i]->start = block.end;
+						blocks[i]->updateDeltaT();
+					}
+					if (blocks[i]->end <= block.end && blocks[i]->start < block.start) {
+						blocks[i]->end = block.start;
+						blocks[i]->updateDeltaT();
+					}
+
+
+					if (blocks[i]->start >= block.start && blocks[i]->end <= block.end) {
+						delete blocks[i];
+						nZ++;
+						if (firstZero) {
+							iZStart = i;
+							firstZero = false;
 						}
 					}
 				}
+				if (nZ > 0) {
+					Block* a;
+					Block* b;
+					for (unsigned i = iZStart; i < nBlocks - nZ - iZStart; i++) {
+						a = blocks[i];
+						b = blocks[i + 1];
+						blocks[i] = b;
+						blocks[i + nZ] = a;
+						nBlocks--;
+					}
+					
+				}
+
 			}
-			PlageTemps plageCommuneVrai = plageCommuneReverse.reverse();
-			return plageCommuneVrai;
-		}	
+			sortStartOrder();
+		}
+	}
+
+	PlageTemps reverse() {
+		PlageTemps reverse(start,end);
+		for (unsigned i = 0; i < nBlocks; i++) {
+			reverse.removeWOSecu(*blocks[i]);
+		}
+		return reverse;
+	}
+
+	PlageTemps interPlage(PlageTemps& plageTemps1) {
+		Block interPlageBlock = this->interBlock(&plageTemps1);
+		PlageTemps plageCommuneReverse = PlageTemps(interPlageBlock.start, interPlageBlock.end);
+		
+		if (interPlageBlock.deltaT > 0) {
+			for (unsigned i = 0; i < nBlocks; i++) {
+				for (unsigned j = 0; j < plageTemps1.nBlocks; j++) {
+					Block inter = blocks[i]->interBlock(plageTemps1.blocks[j]);
+					if (inter.deltaT > 0) {
+						plageCommuneReverse.removeWOSecu(inter);
+					}
+				}
+			}
+		}
+		PlageTemps plageCommuneVrai = plageCommuneReverse.reverse();
+		return plageCommuneVrai;
+	}	
 };
 
 class Numero {
@@ -496,7 +496,7 @@ public:
 		}
 	}
 
-
+private:
 	ListeNumero listNumero;
 	Salle* salles[3] = {};
 };
