@@ -15,8 +15,6 @@ const unsigned HEURE_DEPART = 1200;
 const unsigned TEMPS_PRATIQUE = 25;
 const unsigned TEMPS_SCENE = 15;
 
-
-
 class Block {
 	public:
 		unsigned start;
